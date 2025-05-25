@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>行走专属页面</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            background: #000000;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .container {
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .page {
+            display: none;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .page.active {
+            display: flex;
+        }
+
+        /* 页面1样式 */
+        .page1 {
+            background: rgba(0, 0, 0, 0.8);
+        }
+
+        .login-dialog {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            width: 320px;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: slideIn 0.5s ease-out;
+        }
+
+        .login-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #87CEEB;
+            margin-bottom: 20px;
+        }
+
+        .login-subtitle {
+            font-size: 16px;
+            color: #87CEEB;
+            margin-bottom: 25px;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 16px;
+            margin-bottom: 25px;
+            transition: border-color 0.3s;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: #007AFF;
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: #007AFF;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #0056CC;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #007AFF;
+            border: 1px solid #007AFF;
+        }
+
+        .btn-secondary:hover {
+            background: #007AFF;
+            color: white;
+        }
+
+        /* 页面2样式 */
+        .page2 {
+            background: rgba(0, 0, 0, 0.8);
+        }
+
+        .success-dialog {
+            background: white;
+            border-radius: 16px;
+            padding: 40px 30px;
+            width: 320px;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: slideIn 0.5s ease-out;
+        }
+
+        .success-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #87CEEB;
+            margin-bottom: 20px;
+        }
+
+        .success-message {
+            font-size: 24px;
+            margin-bottom: 30px;
+        }
+
+        .ok-btn {
+            background: #007AFF;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-bottom: 20px;
+            transition: background 0.3s;
+        }
+
+        .ok-btn:hover {
+            background: #0056CC;
+        }
+
+        .surprise-btn {
+            background: transparent;
+            color: #FF3B30;
+            border: none;
+            font-size: 14px;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+
+        /* 页面3样式 */
+        .page3 {
+            background: #000000;
+            flex-direction: column;
+            text-align: center;
+            color: #87CEEB;
+            padding: 40px;
+        }
+
+        .welcome-text {
+            font-size: 48px;
+            margin-bottom: 30px;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .heart-container {
+            margin: 40px 0;
+            animation: pulse 2s infinite;
+        }
+
+        .heart {
+            font-size: 80px;
+            background: linear-gradient(45deg, #FF6B9D, #FF8E9E);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            filter: drop-shadow(0 0 20px rgba(255, 107, 157, 0.5));
+        }
+
+        .subtitle {
+            font-size: 24px;
+            color: #87CEEB;
+            margin-bottom: 40px;
+            animation: fadeInUp 1s ease-out 0.5s both;
+        }
+
+        .clickable-title {
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .clickable-title:hover {
+            color: #FF8E9E;
+            text-shadow: 0 0 10px rgba(255, 142, 158, 0.5);
+        }
+
+        .magic-text {
+            font-size: 18px;
+            font-style: italic;
+            color: #87CEEB;
+            line-height: 1.6;
+            max-width: 500px;
+            margin: 0 auto;
+            animation: fadeInUp 1s ease-out 1s both;
+        }
+
+        /* 页面4样式 */
+        .page4 {
+            background: #000000;
+            flex-direction: column;
+            text-align: center;
+            color: #87CEEB;
+            padding: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .fireworks-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .poetry-content {
+            position: relative;
+            z-index: 2;
+            max-width: 600px;
+            margin: 0 auto;
+            opacity: 0;
+            animation: fadeInPoetry 2s ease-out 3s both;
+        }
+
+        .poetry-line {
+            font-size: 24px;
+            line-height: 1.8;
+            margin-bottom: 30px;
+            color: #87CEEB;
+            text-shadow: 0 0 10px rgba(135, 206, 235, 0.3);
+        }
+
+        .poetry-line:nth-child(odd) {
+            animation: slideInLeft 1s ease-out 3.5s both;
+        }
+
+        .poetry-line:nth-child(even) {
+            animation: slideInRight 1s ease-out 4s both;
+        }
+
+        .poetry-line:nth-child(3) {
+            animation-delay: 4.5s;
+        }
+
+        .poetry-line:nth-child(4) {
+            animation-delay: 5s;
+        }
+
+        .poetry-line:nth-child(5) {
+            animation-delay: 5.5s;
+        }
+
+        .poetry-line:nth-child(6) {
+            animation-delay: 6s;
+        }
+
+        .firework-particle {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        /* 动画效果 */
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+        }
+
+        @keyframes fadeInPoetry {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes fireworkMove {
+            0% {
+                transform: translate(0, 0) scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(var(--dx), var(--dy)) scale(0);
+                opacity: 0;
+            }
+        }
+
+        /* 错误提示 */
+        .error-message {
+            color: #FF3B30;
+            font-size: 14px;
+            margin-top: -15px;
+            margin-bottom: 15px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .error-message.show {
+            opacity: 1;
+        }
+
+        /* 移动端适配 */
+        @media (max-width: 480px) {
+            .login-dialog, .success-dialog {
+                width: 90%;
+                margin: 0 20px;
+            }
+            
+            .welcome-text {
+                font-size: 36px;
+            }
+            
+            .heart {
+                font-size: 60px;
+            }
+            
+            .subtitle {
+                font-size: 20px;
+            }
+            
+            .magic-text {
+                font-size: 16px;
+                padding: 0 20px;
+            }
+
+            .poetry-line {
+                font-size: 20px;
+                margin-bottom: 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 页面1: 登录界面 -->
+        <div class="page page1 active" id="page1">
+            <div class="login-dialog">
+                <div class="login-title">An embedded page on this page says</div>
+                <div class="login-subtitle">请输入行走专属ID:</div>
+                <input type="password" class="input-field" id="passwordInput" placeholder="请输入你的ID～">
+                <div class="error-message" id="errorMessage">密码错误，请重新输入</div>
+                <div class="button-group">
+                    <button class="btn btn-primary" onclick="checkPassword()">OK</button>
+                    <button class="btn btn-secondary" onclick="cancelLogin()">Cancel</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 页面2: 成功提示 -->
+        <div class="page page2" id="page2">
+            <div class="success-dialog">
+                <div class="success-title">An embedded page on this page says</div>
+                <div class="success-message">哟！让我看看谁来啦！🥰</div>
+                <button class="ok-btn" onclick="showFinalPage()">OK</button>
+                <button class="surprise-btn" onclick="surpriseDialogs()">Surprise Dialogs</button>
+            </div>
+        </div>
+
+        <!-- 页面3: 最终页面 -->
+        <div class="page page3" id="page3">
+            <div class="welcome-text">🥰欢迎行走！</div>
+            <div class="heart-container">
+                <div class="heart">💖✨</div>
+            </div>
+            <div class="subtitle clickable-title" onclick="showPoetryPage()">行走专属网页</div>
+            <div class="magic-text">
+                This is a Magic Card. When you see this card, you will be the lucky star for the whole month!
+            </div>
+        </div>
+
+        <!-- 页面4: 诗意页面 -->
+        <div class="page page4" id="page4">
+            <div class="fireworks-container" id="fireworksContainer"></div>
+            <div class="poetry-content">
+                <div class="poetry-line">如果不曾相遇</div>
+                <div class="poetry-line">我们现在会在哪里</div>
+                <div class="poetry-line">幸好 那一天 那一刻</div>
+                <div class="poetry-line">你出现在我的生命中</div>
+                <div class="poetry-line">我们相遇在盛夏</div>
+                <div class="poetry-line">而夏天从未结束</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const correctPassword = "521125";
+        
+        function checkPassword() {
+            const input = document.getElementById('passwordInput');
+            const errorMsg = document.getElementById('errorMessage');
+            
+            if (input.value === correctPassword) {
+                showPage('page2');
+                input.value = '';
+                errorMsg.classList.remove('show');
+            } else {
+                errorMsg.classList.add('show');
+                input.value = '';
+                // 震动效果
+                input.style.animation = 'shake 0.5s';
+                setTimeout(() => {
+                    input.style.animation = '';
+                }, 500);
+            }
+        }
+        
+        function cancelLogin() {
+            document.getElementById('passwordInput').value = '';
+            document.getElementById('errorMessage').classList.remove('show');
+        }
+        
+        function showFinalPage() {
+            showPage('page3');
+            startFireworks();
+        }
+        
+        function surpriseDialogs() {
+            showPage('page3');
+            startFireworks();
+        }
+
+        function showPoetryPage() {
+            showPage('page4');
+            startPageFireworks();
+        }
+        
+        function showPage(pageId) {
+            // 隐藏所有页面
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            // 显示目标页面
+            document.getElementById(pageId).classList.add('active');
+        }
+        
+        function startPageFireworks() {
+            const container = document.getElementById('fireworksContainer');
+            const colors = ['#FF6B9D', '#87CEEB', '#FFD700', '#FF8E9E', '#98FB98', '#DDA0DD'];
+            
+            // 创建多个烟花效果
+            for (let i = 0; i < 20; i++) {
+                setTimeout(() => {
+                    createFirework(container, colors);
+                }, i * 150);
+            }
+            
+            // 持续3秒的烟花效果
+            const fireworkInterval = setInterval(() => {
+                createFirework(container, colors);
+            }, 250);
+            
+            setTimeout(() => {
+                clearInterval(fireworkInterval);
+            }, 3000);
+        }
+        
+        function createFirework(container, colors) {
+            const x = Math.random() * window.innerWidth;
+            const y = Math.random() * (window.innerHeight * 0.6); // 上半部分
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            
+            // 创建烟花爆炸效果
+            for (let i = 0; i < 20; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'firework-particle';
+                particle.style.position = 'absolute';
+                particle.style.left = x + 'px';
+                particle.style.top = y + 'px';
+                particle.style.backgroundColor = color;
+                particle.style.boxShadow = `0 0 15px ${color}, 0 0 30px ${color}`;
+                
+                const angle = (i * 18) * Math.PI / 180;
+                const distance = 80 + Math.random() * 120;
+                const dx = Math.cos(angle) * distance;
+                const dy = Math.sin(angle) * distance;
+                
+                particle.style.setProperty('--dx', dx + 'px');
+                particle.style.setProperty('--dy', dy + 'px');
+                particle.style.animation = `fireworkMove 1.5s ease-out forwards`;
+                
+                container.appendChild(particle);
+                
+                setTimeout(() => {
+                    if (particle.parentNode) {
+                        particle.remove();
+                    }
+                }, 1500);
+            }
+        }
+        
+        function playAnimation() {
+            // 播放一些动画效果
+            const heart = document.querySelector('.heart');
+            heart.style.animation = 'pulse 0.5s ease-in-out 3';
+            
+            // 创建飘落的心形
+            createFloatingHearts();
+        }
+        
+        function createFloatingHearts() {
+            const container = document.querySelector('.page3');
+            
+            for (let i = 0; i < 10; i++) {
+                setTimeout(() => {
+                    const heart = document.createElement('div');
+                    heart.innerHTML = '💖';
+                    heart.style.position = 'absolute';
+                    heart.style.fontSize = '20px';
+                    heart.style.left = Math.random() * 100 + '%';
+                    heart.style.top = '-50px';
+                    heart.style.animation = 'fall 3s linear forwards';
+                    heart.style.pointerEvents = 'none';
+                    
+                    container.appendChild(heart);
+                    
+                    setTimeout(() => {
+                        heart.remove();
+                    }, 3000);
+                }, i * 200);
+            }
+        }
+        
+        function startFireworks() {
+            // 简单的烟花效果
+            setTimeout(() => {
+                createFloatingHearts();
+            }, 500);
+        }
+        
+        // 添加回车键支持
+        document.getElementById('passwordInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                checkPassword();
+            }
+        });
+        
+        // 添加CSS动画
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes shake {
+                0%, 100% { transform: translateX(0); }
+                25% { transform: translateX(-5px); }
+                75% { transform: translateX(5px); }
+            }
+            
+            @keyframes fall {
+                to {
+                    transform: translateY(100vh) rotate(360deg);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
